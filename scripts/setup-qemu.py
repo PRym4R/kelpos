@@ -116,7 +116,8 @@ def main():
 
 
 def link_firmware():
-    """QEMU ищет BIOS (seabios/ipxe) в своём datadir (share/qemu) — соберём симлинки."""
+    """QEMU ищет BIOS (seabios/ipxe) в своём datadir (share/qemu) — соберём симлинки.
+    Ссылки относительные, чтобы жить при переносе/переименовании проекта."""
     dd = os.path.join(ROOT, "usr", "share", "qemu")
     os.makedirs(dd, exist_ok=True)
     for d in ("seabios", "ipxe"):
@@ -125,8 +126,9 @@ def link_firmware():
             continue
         for f in os.listdir(src_dir):
             dst = os.path.join(dd, f)
-            if not os.path.exists(dst):
-                os.symlink(os.path.join(src_dir, f), dst)
+            if os.path.islink(dst) or os.path.exists(dst):
+                os.remove(dst)
+            os.symlink(os.path.relpath(os.path.join(src_dir, f), dd), dst)
 
 
 if __name__ == "__main__":
