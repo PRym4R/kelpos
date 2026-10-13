@@ -1,0 +1,21 @@
+# --- артефакты сборки (генерируется, не коммитим) ---
+/cache/
+/linux/src/
+/userland/rootfs/
+/userland/initramfs.gz
+
+# --- ядерные/объектные выхлопы, если окажутся вне src ---
+*.o
+*.ko
+*.cmd
+*.mod
+*.order
+*.symvers
+vmlinux
+bzImage
+.tmp_*
+
+# --- редакторы / ОС ---
+*.swp
+*~
+.DS_Store

@@ -1,0 +1,7 @@
+#!/bin/sh
+# runit: стадия 2 — супервизор. Exec в runsvdir: следит за /service,
+# перезапускает упавшие сервисы, ПУТ и т.д.
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+export PATH
+
+exec /sbin/runsvdir /service

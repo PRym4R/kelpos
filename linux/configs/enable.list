@@ -1,0 +1,139 @@
+# kelpOS — enable-list
+# База: `make allnoconfig` (всё off) → включаем ТОЛЬКО это → `olddefconfig`.
+# Внимание 6.x: allnoconfig записывает n ВСЕМ, включая родителей-зонтики,
+# и olddefconfig НЕ возвращает их сам (только select). Поэтому зонтики
+# (NET, USB_SUPPORT, SOUND, BLK_DEV, WLAN, NETDEVICES, HID_SUPPORT, VIRTIO_MENU...)
+# и "default y"-символы (MULTIUSER, PRINTK, SHMEM, BINFMT_ELF...) включаем ЯВНО.
+# Синтаксис: "SYMBOL" = y · "SYMBOL=n" = выключить · "SYMBOL=значение" = задать.
+# Примечание: DEVPTS_FS и ANON_INODES убраны — в 6.18 их больше нет,
+# devpts живёт в UNIX98_PTYS, анонимные иноды не нужны.
+
+# ── CPU / платформа ──────────────────────────────
+SMP
+PCI
+ACPI
+
+# ── базовые подсистемы, что обычно "default y" ───
+PRINTK
+MULTIUSER
+POSIX_TIMERS
+SHMEM
+BINFMT_ELF
+BINFMT_SCRIPT
+BLK_DEV
+BLK_DEV_INITRD
+
+# ── зонтики подсистем ────────────────────────────
+NET
+WIRELESS
+RFKILL
+USB_SUPPORT
+SOUND
+NETDEVICES
+ETHERNET
+WLAN
+VIRTIO_MENU
+HID_SUPPORT
+
+# ── отключаем лишнее, если вдруг подтянулось ─────
+NAMESPACES=n
+# spectre-митигаторы тянут objtool → тот требует libelf (gelf.h), а root нет.
+# Для QEMU/dev выключаем; целимся вернуть при реальном железе (см. TODO, сквозное).
+X86_KERNEL_IBT=n
+MITIGATION_RETPOLINE=n
+MITIGATION_RETHUNK=n
+# ORC-анвиндрер — default в choice на x86_64 и тянет objtool. Берём frame-pointer.
+UNWINDER_ORC=n
+UNWINDER_FRAME_POINTER=y
+UNWINDER_GUESS=n
+STACK_VALIDATION=n
+# ключи-ринги тянут openssl (extract-cert) — у нас модулей нет, не нужно
+SYSTEM_TRUSTED_KEYRING=n
+SYSTEM_BLACKLIST_KEYRING=n
+
+# ── консоль / serial / tty ──────────────────────
+TTY
+VT
+VT_CONSOLE
+SERIAL_8250
+SERIAL_8250_CONSOLE
+UNIX98_PTYS
+
+# ── /dev без udev ───────────────────────────────
+DEVTMPFS
+DEVTMPFS_MOUNT
+
+# ── файловые системы ────────────────────────────
+EXT4_FS
+TMPFS
+PROC_FS
+SYSFS
+BINFMT_MISC
+
+# ── сеть ────────────────────────────────────────
+INET
+INET6
+PACKET
+UNIX
+CFG80211
+MAC80211
+
+# ── bluetooth ───────────────────────────────────
+BT
+BT_HCIBTUSB
+BT_HCIUART
+
+# ── virtio (ТОЛЬКО для QEMU / разработки) ───────
+VIRTIO
+VIRTIO_PCI
+VIRTIO_NET
+VIRTIO_BLK
+VIRTIO_CONSOLE
+
+# ── ethernet на реальном железе ─────────────────
+E1000E
+
+# ── wifi чипы (основные вендоры) ────────────────
+WLAN_VENDOR_INTEL
+IWLWIFI
+IWLMVM
+WLAN_VENDOR_REALTEK
+RTW88
+RTW89
+BRCMFMAC
+BRCMUTIL
+WLAN_VENDOR_ATH
+ATH_COMMON
+ATH9K
+
+# ── DRM/KMS + простые драйверы (QEMU) ───────────
+DRM
+DRM_SIMPLEDRM
+DRM_BOCHS
+DRM_VIRTIO_GPU
+
+# ── звук (ALSA; pipewire) ───────────────────────
+SND
+SND_AC97_CODEC
+SND_INTEL8X0
+SND_HDA_INTEL
+SND_VIRTIO
+
+# ── input / usb / hid ───────────────────────────
+SERIO
+INPUT
+INPUT_KEYBOARD
+KEYBOARD_ATKBD
+INPUT_MOUSE
+MOUSE_PS2
+INPUT_EVDEV
+HID
+HID_GENERIC
+USB
+USB_XHCI_HCD
+
+# ── базовое, чтобы нормальный userland жил ──────
+EPOLL
+EVENTFD
+TIMERFD
+SIGNALFD

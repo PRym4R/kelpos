@@ -1,0 +1,9 @@
+#!/bin/sh
+# runit: стадия 3 — выключение. runit-init зовёт её после того, как
+# runsvdir завершился (все сервисы остановлены).
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+export PATH
+
+printf '\n[runit] stage 3: powering off\n' >/dev/console 2>&1
+sync
+exec /usr/bin/chpst -b /sbin/poweroff -f

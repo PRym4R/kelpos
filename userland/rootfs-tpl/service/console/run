@@ -1,0 +1,3 @@
+#!/bin/sh
+# Сервис «console»: интерактивная оболочка на консоли (в VM — serial ttyS0).
+exec /bin/sh < /dev/console > /dev/console 2>&1

@@ -1,0 +1,20 @@
+#!/bin/sh
+# runit: стадия 1 — одноразовый разбор системы (PID1 -> запускается ровно один раз).
+# stdout/stderr у нас тут /dev/null — пишем руками в консоль.
+exec >/dev/console 2>&1
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+export PATH
+
+printf '\n=========== kelpOS: 6.18.56 + glibc/busybox + runit ===========\n'
+
+hostname kelp
+
+mkdir -p /proc /sys /dev/pts /tmp /run /var/run /root
+mount -t proc     proc     /proc    2>/dev/null
+mount -t sysfs    sysfs    /sys     2>/dev/null
+mount -t devtmpfs devtmpfs /dev     2>/dev/null
+mount -t devpts   devpts   /dev/pts 2>/dev/null
+mount -t tmpfs    tmpfs    /tmp     2>/dev/null
+
+printf '[runit] stage 1: system mounted, hostname=kelp\n'

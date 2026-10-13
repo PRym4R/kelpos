@@ -1,0 +1,5 @@
+#!/bin/sh
+# Хост-GCC (glibc) + UAPI-хэдеры нашего ядра.
+# Используется для сборки статичного userland'а (busybox, runit и т.п.).
+KB="$(cd "$(dirname "$0")/.." && pwd)"
+exec gcc -isystem "$KB/cache/khead/include" "$@"

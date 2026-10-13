@@ -1,0 +1,5 @@
+#!/bin/sh
+# Сервис «syslogd»: копим кольцевой лог в памяти (потом он полезен без сериала).
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+mkdir -p /run/log
+exec /sbin/syslogd -n -s 512 -O /run/log/messages
